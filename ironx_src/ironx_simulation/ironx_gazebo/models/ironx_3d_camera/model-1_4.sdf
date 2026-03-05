@@ -1,0 +1,592 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+
+  <model name="ironx_3d_camera">
+    <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+
+    <link name="base_footprint"/>
+
+<!-- start ironx_structure -->
+    <link name="base_link">
+      <inertial>
+        <!-- <pose>0 0 0.04 0 0 0</pose> -->
+        <inertia>
+          <ixx>7.2397393e-01</ixx>
+          <ixy>4.686399e-10</ixy>
+          <ixz>-1.09525703e-08</ixz>
+          <iyy>7.2397393e-01</iyy>
+          <iyz>2.8582649e-09</iyz>
+          <izz>6.53050163e-01</izz>
+        </inertia>
+        <mass>8.2573504e-01</mass>
+      </inertial>
+
+      <collision name="base_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.268 0.258 0.160</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name="base_visual">
+        <pose>0 0 -0.0235 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://ironx_3d_camera/meshes/ironx_structure.dae</uri>
+          </mesh>
+        </geometry>
+        <material> 
+          <ambient>0.1 0.1 0.1 1</ambient>
+        </material>
+      </visual>
+    </link>
+<!-- end ironx_structure -->
+
+<!-- start imu -->
+    <link name="imu_link">
+      <sensor name="imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>30</update_rate>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+        <plugin name="ironx_imu" filename="libgazebo_ros_imu_sensor.so">
+          <ros>
+            <!-- <namespace>/tb3</namespace> -->
+            <remapping>~/out:=imu</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+<!-- end imu -->
+
+<!-- start scan -->
+    <link name="base_scan">
+      <inertial>
+        <!-- <pose>0.025 0 0.130 0 0 0</pose> -->
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0.000</ixy>
+          <ixz>0.000</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0.000</iyz>
+          <izz>0.001</izz>
+        </inertia>
+        <mass>0.114</mass>
+      </inertial>
+
+      <collision name="lidar_sensor_collision">
+        <!-- <pose>0.025 0 0.130 0 0 0</pose> -->
+        <geometry>
+          <cylinder>
+            <radius>0.050</radius>
+            <length>0.070</length>
+          </cylinder>
+        </geometry>
+      </collision>
+
+      <visual name="lidar_sensor_visual">
+        <pose>0.025 0 0.065 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://ironx_3d_camera/meshes/lidar.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <sensor name="hls_lfcd_lds" type="ray">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <pose>0.025 0 0.120 0 0 0</pose>
+        <update_rate>5</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1.000000</resolution>
+              <min_angle>0.000000</min_angle>
+              <max_angle>6.280000</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.120000</min>
+            <max>3.5</max>
+            <resolution>0.015000</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="ironx_laserscan" filename="libgazebo_ros_ray_sensor.so">
+          <ros>
+            <!-- <namespace>/tb3</namespace> -->
+            <remapping>~/out:=scan</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>base_scan</frame_name>
+        </plugin>
+      </sensor>
+    </link>
+<!-- end scan -->
+
+<!-- start camera -->
+    <link name="camera_link">
+      <inertial>
+        <pose>0 0.0 0 0 0 0</pose>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0.000</ixy>
+          <ixz>0.000</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0.000</iyz>
+          <izz>0.001</izz>
+        </inertia>
+        <mass>0.035</mass>
+      </inertial>
+
+      <pose>0.105 0 0.065 0 -0.10 0</pose>
+      <visual name="camera_visual">
+        <!-- <pose>0.118 0 0.10 0 0 0</pose> -->
+        <geometry>
+          <mesh>
+            <uri>model://ironx_3d_camera/meshes/3d_camera.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.4 0.4 0.4 1</ambient>  
+        </material>
+      </visual>
+
+      <sensor name="camera" type="camera">
+        <pose>0.04 0 0 0 0 0</pose>
+        <always_on>false</always_on>
+        <visualize>false</visualize>
+        <update_rate>30</update_rate>
+        <camera name="picam">
+          <horizontal_fov>0.985595</horizontal_fov>
+          <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+          </image>
+          <clip>
+              <near>0.03</near>
+              <far>100</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise is sampled independently per pixel on each frame.
+                  That pixel's noise value is added to each of its color
+                  channels, which at that point lie in the range [0,1]. -->
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+          <plugin name="camera_driver" filename="libgazebo_ros_camera.so">
+            <ros>
+              <!-- <namespace>test_cam</namespace> -->
+              <!-- <remapping>image_raw:=image_demo</remapping> -->
+              <!-- <remapping>camera_info:=camera_info_demo</remapping> -->
+            </ros>
+            <!-- camera_name>omit so it defaults to sensor name</camera_name-->
+            <!-- frame_name>omit so it defaults to link name</frameName-->
+            <!-- <hack_baseline>0.07</hack_baseline> -->
+          </plugin>
+      </sensor>
+    </link>    
+<!-- end camera -->
+
+<!-- start wheel_1 -->
+    <link name="wheel_1_link">
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>1.8158194e-03</ixx>
+          <ixy>-9.3392e-12</ixy>
+          <ixz>1.04909e-11</ixz>
+          <iyy>3.2922126e-03</iyy>
+          <iyz>5.75694e-11</iyz>
+          <izz>1.8158194e-03</izz>
+        </inertia>
+        <mass>2.8498940e-02</mass>
+      </inertial>
+
+      <collision name="wheel_1_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.048</radius>
+            <length>0.050</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <!-- This friction pamareter don't contain reliable data!! -->
+          <friction>
+            <ode>
+              <mu>100000.0</mu>
+              <mu2>100000.0</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+5</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+
+      <visual name="wheel_1_visual">
+        <pose>0.0745 0.0915 -0.048</pose>
+        <geometry>
+          <mesh>
+            <uri>model://ironx_3d_camera/meshes/wheel.dae</uri>
+          </mesh>
+        </geometry>
+        <material> 
+          <ambient>0.1 0.1 0.1 1</ambient>
+        </material>
+      </visual>
+    </link>
+<!-- end wheel_1 -->
+
+<!-- start wheel_2 -->
+    <link name="wheel_2_link">
+
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>1.8158194e-03</ixx>
+          <ixy>-9.3392e-12</ixy>
+          <ixz>1.04909e-11</ixz>
+          <iyy>3.2922126e-03</iyy>
+          <iyz>5.75694e-11</iyz>
+          <izz>1.8158194e-03</izz>
+        </inertia>
+        <mass>2.8498940e-02</mass>
+      </inertial>
+
+      <collision name="wheel_2_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.048</radius>
+            <length>0.050</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <!-- This friction pamareter don't contain reliable data!! -->
+          <friction>
+            <ode>
+              <mu>100000.0</mu>
+              <mu2>100000.0</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+5</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+
+      <visual name="wheel_2_visual">
+        <pose>0.0745 -0.0915 -0.048 0 0 3.1416</pose>
+        <geometry>
+          <mesh>
+            <uri>model://ironx_3d_camera/meshes/wheel.dae</uri>
+          </mesh>
+        </geometry>
+        <material> 
+          <ambient>0.1 0.1 0.1 1</ambient>
+        </material>
+      </visual>
+    </link>
+<!-- end wheel_2 -->
+
+<!-- start wheel_3 -->
+    <link name="wheel_3_link">
+
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>1.8158194e-03</ixx>
+          <ixy>-9.3392e-12</ixy>
+          <ixz>1.04909e-11</ixz>
+          <iyy>3.2922126e-03</iyy>
+          <iyz>5.75694e-11</iyz>
+          <izz>1.8158194e-03</izz>
+        </inertia>
+        <mass>2.8498940e-02</mass>
+      </inertial>
+
+      <collision name="wheel_3_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.048</radius>
+            <length>0.050</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <!-- This friction pamareter don't contain reliable data!! -->
+          <friction>
+            <ode>
+              <mu>100000.0</mu>
+              <mu2>100000.0</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+5</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+
+      <visual name="wheel_3_visual">
+        <pose>-0.0745 0.0915 -0.048 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://ironx_3d_camera/meshes/wheel.dae</uri>
+          </mesh>
+        </geometry>
+        <material> 
+          <ambient>0.1 0.1 0.1 1</ambient>
+        </material>
+      </visual>
+    </link>
+<!-- end wheel_3 -->
+
+<!-- start wheel_4 -->
+    <link name="wheel_4_link">
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>1.8158194e-03</ixx>
+          <ixy>-9.3392e-12</ixy>
+          <ixz>1.04909e-11</ixz>
+          <iyy>3.2922126e-03</iyy>
+          <iyz>5.75694e-11</iyz>
+          <izz>1.8158194e-03</izz>
+        </inertia>
+        <mass>2.8498940e-02</mass>
+      </inertial>
+
+      <collision name="wheel_4_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.048</radius>
+            <length>0.050</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <!-- This friction pamareter don't contain reliable data!! -->
+          <friction>
+            <ode>
+              <mu>100000.0</mu>
+              <mu2>100000.0</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+5</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+
+      <visual name="wheel_4_visual">
+        <pose>-0.0745 -0.0915 -0.048 0 0 3.1416</pose>
+        <geometry>
+          <mesh>
+            <uri>model://ironx_3d_camera/meshes/wheel.dae</uri>
+          </mesh>
+        </geometry>
+        <material> 
+          <ambient>0.1 0.1 0.1 1</ambient>
+        </material>
+      </visual>
+    </link>
+<!-- end wheel_4 -->
+
+    <joint name="base_joint" type="fixed">
+      <parent>base_footprint</parent>
+      <child>base_link</child>
+      <pose>0 0 0.0235 0 0 0</pose>
+    </joint>
+
+    <joint name="wheel_1_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>wheel_1_link</child>
+      <pose>0.0745 0.0915 0.048 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="wheel_2_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>wheel_2_link</child>
+      <pose>0.0745 -0.0915 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="wheel_3_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>wheel_3_link</child>
+      <pose>-0.0745 0.0915 0.048 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="wheel_4_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>wheel_4_link</child>
+      <pose>-0.0745 -0.0915 0.048 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="imu_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>imu_link</child>
+      <pose>-0.065 0 0.080 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="lidar_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>base_scan</child>
+      <pose>0.025 0 0.145 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="camera_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>camera_link</child>
+      <pose>0.105 0 0.065 0 -0.10 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <plugin name="ironx_controller" filename="libgazebo_ros_planar_move.so">
+      <ros>
+
+      </ros>
+
+      <update_rate>100</update_rate>
+      <publish_rate>10</publish_rate>
+
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+
+      <covariance_x>0.0001</covariance_x>
+      <covariance_y>0.0001</covariance_y>
+      <covariance_yaw>0.01</covariance_yaw>
+
+    </plugin>
+
+    <plugin name="ironx_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+      <ros>
+        <!-- <namespace>/tb3</namespace> -->
+        <remapping>~/out:=joint_states</remapping>
+      </ros>
+      <update_rate>30</update_rate>      
+      <joint_name>wheel_1_joint</joint_name>
+      <joint_name>wheel_2_joint</joint_name>
+      <joint_name>wheel_3_joint</joint_name>
+      <joint_name>wheel_4_joint</joint_name>
+    </plugin> 
+
+  </model>
+
+</sdf>

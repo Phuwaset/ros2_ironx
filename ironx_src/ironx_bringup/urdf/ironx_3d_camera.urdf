@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot name="plane" xmlns:xacro="http://ros.org/wiki/xacro">
+
+ 
+    <material name="white">
+	    <color rgba="1 1 1 1"/>
+    </material>
+
+
+    <link name="base_footprint">
+        
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <origin xyz="0 0 0.05" rpy="0 0 1.5708" />
+        <parent link="base_footprint" />
+        <child link="base_link" />
+    </joint>
+
+    <link name="base_link">
+    
+    </link>   
+    
+    
+    <joint name="imu_joint" type="floating">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="imu_link" />
+    </joint>
+
+    <link name="imu_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ironx_bringup/meshes/stl/ironx_model_3d_camera.stl"/> 
+      </geometry>
+      <material name="white"/>
+    </visual>
+    </link>   
+
+    
+</robot>
